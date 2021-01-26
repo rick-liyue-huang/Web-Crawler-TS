@@ -1,18 +1,24 @@
 
+import fs from 'fs';
+import path from 'path';
 import superagent from 'superagent';  // need .d.ts type file, @types/superagent
-import cheerio from 'cheerio';
+// import cheerio from 'cheerio';
+import ContentAnalyzer from './contentanalyzer';
+import OtherAnalyzer from './otheranalyzer';
 
-interface Course  {
-  title: string,
-  count:  number
+export interface Analyzer {
+  analyze: (html: string, filePath: string) => string;
 }
 
 class Crawler {
-  private SECRET: string = `x3b174jsx`; // secretkey
-  private url: string = `http://www.dell-lee.com/typescript/demo.html?secret=${this.SECRET}`;
+  // private SECRET: string = `x3b174jsx`; // secretkey
+  // private url: string = `http://www.dell-lee.com/typescript/demo.html?secret=${this.SECRET}`;
   private rawHTML = ``; // used to store the webpage contents in string type
-  constructor() {
-    this.getRawHTML();
+  private filePath = path.resolve(__dirname, '../data/courseinfo.json');
+  
+  constructor(private url: string, private analyzer: Analyzer) {
+    // this.getRawHTML();
+    this.initCrawlerProcess();
   }
 
   /**
@@ -22,33 +28,32 @@ class Crawler {
     const result = await superagent.get(this.url);
     // console.log(result.text);
     this.rawHTML = result.text;
-    this.getCourseInfo(this.rawHTML);
+    // this.getCourseInfo(this.rawHTML);
+    return this.rawHTML;
   }
 
-  getCourseInfo(html: string) {
-    const $ = cheerio.load(html);
-    const courseItems = $('.course-item');
-    // console.log(courseItems.length);
-    const courseInfos: Course[] = [];  // define the courseInfo object type by interface
-    courseItems.map((index, elem) => {
-      const descs = $(elem).find('.course-desc');
-      const title = descs.eq(0).text();
-      // console.log(title);
-      const count = parseInt(descs.eq(1).text().split('：')[1], 10);
-      // console.log(title, count);
-
-      courseInfos.push({
-        title, count
-      });
-    });
-
-    const result = {  // add time stamp on result
-      time: (new Date()).getTime(),
-      data: courseInfos
-    }
-    console.log(result);
-    
+  writeFile(content: string) {
+    fs.writeFileSync(this.filePath, content);
   }
+
+  /**
+   * combine the upone methods
+   */
+  async initCrawlerProcess() {
+    // const filePath = path.resolve(__dirname, '../data/courseinfo.json');
+    const html = await this.getRawHTML();
+    // const courseResult = this.getCourseInfo(html);
+    // console.log('courseResult', courseResult);
+    // const fileContent = this.generateJSONContent(courseResult);
+
+    const fileContent = this.analyzer.analyze(html, this.filePath);
+    this.writeFile(fileContent);
+  }
+
 }
 
-const crawler = new Crawler();
+const SECRET: string = `x3b174jsx`; // secretkey
+const url: string = `http://www.dell-lee.com/typescript/demo.html?secret=${SECRET}`;
+// const analyzer = new ContentAnalyzer();
+const analyzer = new OtherAnalyzer();
+new Crawler(url, analyzer);
