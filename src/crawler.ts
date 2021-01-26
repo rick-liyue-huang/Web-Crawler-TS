@@ -4,7 +4,7 @@ import path from 'path';
 import superagent from 'superagent';  // need .d.ts type file, @types/superagent
 // import cheerio from 'cheerio';
 import ContentAnalyzer from './contentanalyzer';
-import OtherAnalyzer from './otheranalyzer';
+// import OtherAnalyzer from './otheranalyzer';
 
 export interface Analyzer {
   analyze: (html: string, filePath: string) => string;
@@ -24,7 +24,7 @@ class Crawler {
   /**
    * get the page contents in string type
    */
-  async getRawHTML() {
+  private async getRawHTML() {
     const result = await superagent.get(this.url);
     // console.log(result.text);
     this.rawHTML = result.text;
@@ -32,14 +32,14 @@ class Crawler {
     return this.rawHTML;
   }
 
-  writeFile(content: string) {
+  private writeFile(content: string) {
     fs.writeFileSync(this.filePath, content);
   }
 
   /**
    * combine the upone methods
    */
-  async initCrawlerProcess() {
+  private async initCrawlerProcess() {
     // const filePath = path.resolve(__dirname, '../data/courseinfo.json');
     const html = await this.getRawHTML();
     // const courseResult = this.getCourseInfo(html);
@@ -55,5 +55,10 @@ class Crawler {
 const SECRET: string = `x3b174jsx`; // secretkey
 const url: string = `http://www.dell-lee.com/typescript/demo.html?secret=${SECRET}`;
 // const analyzer = new ContentAnalyzer();
-const analyzer = new OtherAnalyzer();
+
+/**
+ * using singleton pattern 
+ */
+const analyzer = ContentAnalyzer.getInstance();
+// const analyzer = new OtherAnalyzer();
 new Crawler(url, analyzer);

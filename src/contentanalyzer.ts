@@ -21,6 +21,17 @@ interface Content {
 
 
 export default class ContentAnalyzer implements Analyzer {
+
+  private static instance: ContentAnalyzer;
+  private constructor() {}
+
+  public static getInstance(): ContentAnalyzer {
+    if(!ContentAnalyzer.instance) {
+      ContentAnalyzer.instance = new ContentAnalyzer();
+    }
+    return ContentAnalyzer.instance;
+  }
+
   /**
    * get items from webpage and store in array
    * @param html 
