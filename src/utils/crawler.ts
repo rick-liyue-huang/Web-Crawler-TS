@@ -30,7 +30,7 @@ export default class Crawler {
   // private secret = `x3b174jsx`;
   // private url = `http://www.dell-lee.com/typescript/demo.html?secret=${this.secret}`;
   // private rawHTML = ``;
-  private filePath = path.resolve(__dirname, '../data/course.json');
+  private filePath = path.resolve(__dirname, '../../data/course.json');
 
   private async initCrawlerProcess() {
     // const filePath = path.resolve(__dirname, '../data/course.json');

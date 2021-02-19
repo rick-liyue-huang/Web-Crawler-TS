@@ -54,7 +54,7 @@ export default class Analyzer implements AnalyzerInterface {
   }
 
   private generateJSONContent(courseResult: CourseResult, filePath: string) {
-    // const filePath = path.resolve(__dirname, '../data/course.json');
+    // const filePath = path.resolve(__dirname, '../../data/course.json');
     let fileContent: Content = {};
     if (fs.existsSync(filePath)) {
       fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
