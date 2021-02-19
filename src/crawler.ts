@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import superagent from 'superagent';
 // import cheerio from 'cheerio';
-import Analyzer from './analyzer';
+// import Analyzer from './analyzer';
 // import Analyzer from './theotherAnalyzer';
 
 /*
@@ -26,7 +26,7 @@ interface Content {
 export interface AnalyzerInterface {
   analyze: (html: string, filePath: string) => string;
 }
-class Crawler {
+export default class Crawler {
   // private secret = `x3b174jsx`;
   // private url = `http://www.dell-lee.com/typescript/demo.html?secret=${this.secret}`;
   // private rawHTML = ``;
@@ -98,8 +98,8 @@ class Crawler {
   }
 }
 
-const secret = `x3b174jsx`;
-const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
+// const secret = `x3b174jsx`;
+// const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
 // const analyzer = new Analyzer();
-const analyzer = Analyzer.getInstance();
-new Crawler(url, analyzer);
+// const analyzer = Analyzer.getInstance();
+// new Crawler(url, analyzer);
